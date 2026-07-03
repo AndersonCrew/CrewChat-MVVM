@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.crewcloud.apps.crewchat.data.local.AppPreferenceDataStore
 import com.crewcloud.apps.crewchat.data.local.AppPreferenceDataStoreImpl
 import com.crewcloud.apps.crewchat.data.local.CrewChatDatabase
+import com.crewcloud.apps.crewchat.data.local.dao.UserDao
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -27,6 +28,12 @@ object RoomDatabaseModule {
     ): CrewChatDatabase {
         return Room.databaseBuilder(context, CrewChatDatabase::class.java, "CrewChat-Room-DB")
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserDao(database: CrewChatDatabase): UserDao {
+        return database.userDao()
     }
 }
 

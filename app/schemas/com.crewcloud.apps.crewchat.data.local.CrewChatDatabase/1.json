@@ -2,15 +2,63 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "191d6d744e7a229681a45fe738570885",
+    "identityHash": "5d3dc269524e57c86f14b3f87c1e09e5",
     "entities": [
       {
-        "tableName": "User",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "tableName": "user",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` TEXT NOT NULL, `fullName` TEXT NOT NULL, `id` INTEGER NOT NULL, `avatarUrl` TEXT NOT NULL, `permissionType` INTEGER NOT NULL, `companyName` TEXT NOT NULL, `mailAddress` TEXT NOT NULL, `companyLocations` TEXT NOT NULL, `companyNo` INTEGER NOT NULL, PRIMARY KEY(`userId`))",
         "fields": [
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fullName",
+            "columnName": "fullName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
           {
             "fieldPath": "id",
             "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avatarUrl",
+            "columnName": "avatarUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "permissionType",
+            "columnName": "permissionType",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "companyName",
+            "columnName": "companyName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mailAddress",
+            "columnName": "mailAddress",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "companyLocations",
+            "columnName": "companyLocations",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "companyNo",
+            "columnName": "companyNo",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -18,14 +66,14 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "id"
+            "userId"
           ]
         }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '191d6d744e7a229681a45fe738570885')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5d3dc269524e57c86f14b3f87c1e09e5')"
     ]
   }
 }

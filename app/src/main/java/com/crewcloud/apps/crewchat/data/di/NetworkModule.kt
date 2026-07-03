@@ -1,9 +1,8 @@
 package com.crewcloud.apps.crewchat.data.di
 
 import com.crewcloud.apps.crewchat.BuildConfig
-import com.crewcloud.apps.crewchat.data.api.DazoneApiService
-import com.crewcloud.apps.crewchat.data.api.StaticApiService
-import com.crewcloud.apps.crewchat.data.local.AppPreferenceDataStore
+import com.crewcloud.apps.crewchat.data.network.api.DazoneApiService
+import com.crewcloud.apps.crewchat.data.network.api.StaticApiService
 import com.crewcloud.apps.crewchat.data.network.AuthInterceptor
 import com.crewcloud.apps.crewchat.data.network.DazoneOkhttp
 import com.crewcloud.apps.crewchat.data.network.DazoneRetrofit
@@ -83,7 +82,7 @@ object NetworkModule {
         moshi: Moshi,
         @DazoneOkhttp okHttpClient: OkHttpClient,
     ): Retrofit {
-        return Retrofit.Builder()
+        return Retrofit.Builder().baseUrl("https://localhost.com/")
             .addConverterFactory(MoshiConverterFactory.create(moshi)).client(okHttpClient).build()
     }
 

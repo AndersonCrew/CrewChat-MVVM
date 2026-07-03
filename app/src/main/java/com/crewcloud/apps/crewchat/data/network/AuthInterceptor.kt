@@ -17,7 +17,7 @@ class AuthInterceptor @Inject constructor(
         val originalRequest = chain.request()
 
         val newBaseUrlString = runBlocking { appPreferenceDataStore.getBaseUrl() }
-        val newHttpUrl = newBaseUrlString.toHttpUrlOrNull()
+        val newHttpUrl = newBaseUrlString?.toHttpUrlOrNull()
 
         return if (newHttpUrl != null) {
             val newUrl = originalRequest.url.newBuilder()

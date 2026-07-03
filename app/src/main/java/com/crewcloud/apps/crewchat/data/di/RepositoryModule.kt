@@ -1,7 +1,9 @@
 package com.crewcloud.apps.crewchat.data.di
 
 import com.crewcloud.apps.crewchat.data.repository.AuthRepositoryImpl
+import com.crewcloud.apps.crewchat.data.repository.UserRepositoryImpl
 import com.crewcloud.apps.crewchat.domain.repository.AuthRepository
+import com.crewcloud.apps.crewchat.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -20,4 +22,10 @@ interface RepositoryModule {
     abstract fun bindAuthRepository(
         impl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindUserRepository(
+        impl: UserRepositoryImpl
+    ): UserRepository
 }

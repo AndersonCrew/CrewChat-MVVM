@@ -13,7 +13,12 @@ import androidx.core.content.edit
  */
 interface SecureLocalStorage {
     suspend fun saveSessionId(value: String)
+
+    suspend fun saveUserName(userName: String)
+    suspend fun savePassword(password: String)
     suspend fun getSessionId(): String?
+    suspend fun getUserName(): String?
+    suspend fun getPassword(): String?
 
     suspend fun clearSession()
 }
@@ -24,6 +29,8 @@ class SecureLocalStorageImpl @Inject constructor(
 
     private companion object {
         const val KEY_SESSION_ID = "session_id"
+        const val USERNAME = "user_name"
+        const val PASSWORD = "password"
     }
 
     private val masterKey =
@@ -41,8 +48,24 @@ class SecureLocalStorageImpl @Inject constructor(
         prefs.edit { putString(KEY_SESSION_ID, value) }
     }
 
+    override suspend fun saveUserName(userName: String) {
+        prefs.edit { putString(USERNAME, userName) }
+    }
+
+    override suspend fun savePassword(password: String) {
+        prefs.edit { putString(PASSWORD, password) }
+    }
+
     override suspend fun getSessionId(): String? {
         return prefs.getString(KEY_SESSION_ID, null)
+    }
+
+    override suspend fun getUserName(): String? {
+        return prefs.getString(USERNAME, null)
+    }
+
+    override suspend fun getPassword(): String? {
+        return prefs.getString(PASSWORD, null)
     }
 
     override suspend fun clearSession() {

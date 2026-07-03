@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.crewcloud.apps.crewchat.ui.navigation.AppNavigation
-import com.crewcloud.apps.crewchat.ui.theme.CrewChatMVVMTheme
+import com.crewcloud.apps.crewchat.presentation.ui.navigation.AppNavigation
+import com.crewcloud.apps.crewchat.presentation.core.theme.CrewChatMVVMTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
