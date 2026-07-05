@@ -1,5 +1,6 @@
 package com.crewcloud.apps.crewchat.data.network
 
+import android.util.Log
 import com.crewcloud.apps.crewchat.data.local.AppPreferenceDataStore
 import kotlinx.coroutines.runBlocking
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull

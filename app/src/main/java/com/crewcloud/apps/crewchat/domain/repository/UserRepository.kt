@@ -7,6 +7,8 @@ import com.crewcloud.apps.crewchat.domain.model.User
  */
 interface UserRepository {
     suspend fun saveUser(user: User)
+
+    suspend fun clearUser()
     suspend fun getUser(): User?
 
     suspend fun getDomain(): String?

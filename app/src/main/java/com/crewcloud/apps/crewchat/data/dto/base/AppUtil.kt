@@ -16,3 +16,22 @@ fun getTimezoneOffsetInMinutes(): String {
     }
     return sign + "" + offsetMinutes
 }
+
+fun timeToStringNotAMPM(hourOfDay: Int, minute: Int): String {
+    var text = ""
+    var minutes = ""
+    if (minute < 10) {
+        minutes = "0$minute"
+    } else {
+        minutes = minute.toString()
+    }
+    if ((hourOfDay == 12 && minute > 0) || hourOfDay > 12) { // PM
+        text += "$hourOfDay:$minutes"
+    } else { // AM
+        if (hourOfDay < 10) {
+            text += "0"
+        }
+        text += "$hourOfDay:$minutes"
+    }
+    return text
+}

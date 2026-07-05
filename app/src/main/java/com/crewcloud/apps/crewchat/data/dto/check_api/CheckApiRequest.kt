@@ -22,5 +22,6 @@ data class CheckApiRequest(
 ) {
     companion object ApiNameCheck {
         const val LOGIN_CREWCHAT = "Login_CrewChat"
+        const val MOBILE_DEVICES_ACCESS = "CheckMobileDevicesAccessrestrictions"
     }
 }

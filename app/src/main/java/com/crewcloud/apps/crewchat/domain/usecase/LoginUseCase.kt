@@ -1,13 +1,17 @@
 package com.crewcloud.apps.crewchat.domain.usecase
 
+import android.content.Context
+import android.provider.Settings
+import android.util.Log
+import com.crewcloud.apps.crewchat.domain.model.Result
 import com.crewcloud.apps.crewchat.domain.model.User
 import com.crewcloud.apps.crewchat.domain.repository.AuthRepository
+import com.crewcloud.apps.crewchat.domain.repository.UserRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import javax.inject.Inject
-import com.crewcloud.apps.crewchat.domain.model.Result
-import com.crewcloud.apps.crewchat.domain.repository.UserRepository
 import kotlinx.coroutines.coroutineScope
+import javax.inject.Inject
 
 /**
  * Created by BM Anderson on 3/7/26.
@@ -32,7 +36,8 @@ class LoginUseCase @Inject constructor(
     suspend operator fun invoke(
         domain: String,
         userName: String,
-        password: String
+        password: String,
+        androidId: String
     ): Result<User> = coroutineScope {
         val domain = cleanDomain(domain)
         val saveDomainDeferred = async { authRepository.saveDomain(domain) }
@@ -55,6 +60,8 @@ class LoginUseCase @Inject constructor(
 
         //Save Base URL
         authRepository.saveBaseUrl(baseUrl)
+        Log.d("LoginUseCase", "ssl=$ssl domain=$domain baseUrl=$baseUrl")
+
         val resultCheckApi = authRepository.checkLoginApi(
             domain = domain
         )
@@ -80,14 +87,42 @@ class LoginUseCase @Inject constructor(
             return@coroutineScope resultLogin
         }
 
+        val hasCheckDeviceApi = authRepository.checkApiDeviceAccess(domain)
+        if (hasCheckDeviceApi is Result.Failure) {
+            return@coroutineScope hasCheckDeviceApi
+        }
+
         val user = (resultLogin as Result.ResultSuccess).result
-        userRepository.saveUser(user)
-        authRepository.saveSessionId(user.session)
-        authRepository.saveDDSServerIp(user.crewDdsServerIp)
-        authRepository.saveDDSServerPort(user.crewDdsServerPort)
-        authRepository.saveFileServerIp(user.crewChatFileServerIp)
-        authRepository.saveFileServerPort(user.crewChatFileServerPort)
-        return@coroutineScope Result.ResultSuccess(result = user)
+        savePersisUser(user)
+
+        if((hasCheckDeviceApi as Result.ResultSuccess).result.api) {
+            checkDeviceAccess(androidId, user)
+        } else {
+            insertAndroidDevice(user)
+        }
+    }
+
+    suspend fun checkDeviceAccess(androidId: String, user: User) : Result<User>{
+        val result = authRepository.checkDeviceAccess(androidId)
+
+        if(result is Result.Failure) {
+            authRepository.clearSession()
+            userRepository.clearUser()
+            return result
+        }
+
+        return insertAndroidDevice(user)
+    }
+
+    suspend fun insertAndroidDevice(user: User): Result<User> {
+        val result = authRepository.insertAndroidDevice()
+        if(result is Result.Failure) {
+            authRepository.clearSession()
+            userRepository.clearUser()
+            return result
+        }
+
+        return Result.ResultSuccess(result = user)
     }
 
     fun cleanDomain(rawDomain: String): String {
@@ -96,5 +131,14 @@ class LoginUseCase @Inject constructor(
             .removePrefix("https://")
             .removePrefix("http://")
             .removeSuffix("/")
+    }
+
+    suspend fun savePersisUser(user: User) = coroutineScope {
+        userRepository.saveUser(user)
+        authRepository.saveSessionId(user.session)
+        authRepository.saveDDSServerIp(user.crewDdsServerIp)
+        authRepository.saveDDSServerPort(user.crewDdsServerPort)
+        authRepository.saveFileServerIp(user.crewChatFileServerIp)
+        authRepository.saveFileServerPort(user.crewChatFileServerPort)
     }
 }

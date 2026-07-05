@@ -1,5 +1,7 @@
 package com.crewcloud.apps.crewchat.presentation.ui.login
 
+import android.annotation.SuppressLint
+import android.provider.Settings
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -52,6 +55,7 @@ import com.crewcloud.apps.crewchat.presentation.core.theme.Dimen.ButtonHeight
 /**
  * Created by BM Anderson on 2/7/26.
  */
+@SuppressLint("HardwareIds")
 @Composable
 fun LoginScreen(
     onNavigateToHome: () -> Unit
@@ -61,6 +65,8 @@ fun LoginScreen(
     val focusManager = LocalFocusManager.current
     var dialogMessage by remember { mutableStateOf<String?>(null) }
     val TAG = "LoginScreen"
+    val androidId =
+        Settings.Secure.getString(LocalContext.current.contentResolver, Settings.Secure.ANDROID_ID)
 
     LaunchedEffect(Unit) {
         viewModel.init()
@@ -208,7 +214,9 @@ fun LoginScreen(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(ButtonHeight), onClick = viewModel::onLogin
+                    .height(ButtonHeight), onClick = {
+                    viewModel.onLogin(androidId)
+                }
             ) {
                 Text("Login")
             }
@@ -225,7 +233,7 @@ fun LoginScreen(
             )
         }
 
-        if(uiState.isLoading) {
+        if (uiState.isLoading) {
             Log.d(TAG, "LoadingDialog")
             LoadingDialog()
         }

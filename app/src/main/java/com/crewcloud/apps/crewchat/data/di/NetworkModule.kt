@@ -51,8 +51,8 @@ object NetworkModule {
     fun provideDazoneOkhttpClient(
         loggingInterceptor: HttpLoggingInterceptor, authInterceptor: AuthInterceptor
     ): OkHttpClient {
-        return OkHttpClient.Builder().addInterceptor(loggingInterceptor)
-            .addInterceptor(authInterceptor).build()
+        return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor).addInterceptor(loggingInterceptor).build()
     }
 
     @Provides

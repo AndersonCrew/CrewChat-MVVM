@@ -1,5 +1,6 @@
 package com.crewcloud.apps.crewchat.presentation.ui.login
 
+import android.provider.Settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crewcloud.apps.crewchat.domain.model.Result
@@ -48,7 +49,7 @@ class LoginViewModel @Inject constructor(
         _uiState.update { it.copy(password = value) }
     }
 
-    fun onLogin() = viewModelScope.launch {
+    fun onLogin(androidId: String) = viewModelScope.launch {
         val domain = _uiState.value.domain
         val userName = _uiState.value.userName
         val password = _uiState.value.password
@@ -62,7 +63,7 @@ class LoginViewModel @Inject constructor(
                 }
 
                 when (val result =
-                    loginUseCase(domain = domain, userName = userName, password = password)) {
+                    loginUseCase(domain = domain, userName = userName, password = password, androidId = androidId)) {
                     is Result.Failure -> {
                         _uiEvent.emit(LoginEvent.LoginError(message = result.appError.error))
                     }

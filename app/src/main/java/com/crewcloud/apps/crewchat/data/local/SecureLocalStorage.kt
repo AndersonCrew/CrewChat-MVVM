@@ -70,7 +70,7 @@ class SecureLocalStorageImpl @Inject constructor(
 
     override suspend fun clearSession() {
         prefs.edit {
-            clear()
+            remove(KEY_SESSION_ID)
         }
     }
 }

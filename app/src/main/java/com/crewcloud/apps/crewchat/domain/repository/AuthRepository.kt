@@ -15,6 +15,10 @@ interface AuthRepository {
     suspend fun checkSSL(domain: String): Result<CheckSSL>
     suspend fun checkLoginApi(domain: String): Result<CheckApi>
 
+    suspend fun checkApiDeviceAccess(domain: String): Result<CheckApi>
+    suspend fun checkDeviceAccess(androidId: String): Result<Boolean>
+    suspend fun insertAndroidDevice(): Result<Boolean>
+
     suspend fun saveDomain(domain: String)
     suspend fun saveUserName(userName: String)
     suspend fun savePassword(password: String)
@@ -27,4 +31,6 @@ interface AuthRepository {
 
     suspend fun getUserName(): String?
     suspend fun getPassword(): String?
+
+    suspend fun clearSession()
 }

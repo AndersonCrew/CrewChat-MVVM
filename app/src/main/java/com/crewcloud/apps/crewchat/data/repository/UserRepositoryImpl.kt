@@ -19,6 +19,10 @@ class UserRepositoryImpl @Inject constructor(
         userDao.saveUser(user.toEntity())
     }
 
+    override suspend fun clearUser() {
+        userDao.clearUser()
+    }
+
     override suspend fun getUser(): User? {
         return userDao.getUser()?.toDomain()
     }

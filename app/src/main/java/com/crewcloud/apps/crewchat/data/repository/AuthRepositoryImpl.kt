@@ -1,20 +1,26 @@
 package com.crewcloud.apps.crewchat.data.repository
 
-import com.crewcloud.apps.crewchat.domain.model.AppError
-import com.crewcloud.apps.crewchat.domain.model.Result
+import com.crewcloud.apps.crewchat.data.dto.base.timeToStringNotAMPM
 import com.crewcloud.apps.crewchat.data.dto.check_api.CheckApiRequest
-import com.crewcloud.apps.crewchat.data.network.api.StaticApiService
+import com.crewcloud.apps.crewchat.data.dto.check_device_access.CheckDeviceAccessRequest
 import com.crewcloud.apps.crewchat.data.dto.check_ssl.CheckSSLRequest
+import com.crewcloud.apps.crewchat.data.dto.insert_fcm.NotificationOptions
+import com.crewcloud.apps.crewchat.data.dto.insert_fcm.UpdateNotificationRequest
+import com.crewcloud.apps.crewchat.data.dto.insert_fcm.WrapperNotificationOptions
 import com.crewcloud.apps.crewchat.data.dto.login.LoginRequest
 import com.crewcloud.apps.crewchat.data.local.AppPreferenceDataStore
 import com.crewcloud.apps.crewchat.data.local.SecureLocalStorage
 import com.crewcloud.apps.crewchat.data.mapper.toDomain
 import com.crewcloud.apps.crewchat.data.network.api.DazoneApiService
+import com.crewcloud.apps.crewchat.data.network.api.StaticApiService
 import com.crewcloud.apps.crewchat.data.network.safeApiCall
+import com.crewcloud.apps.crewchat.domain.model.AppError
 import com.crewcloud.apps.crewchat.domain.model.CheckApi
 import com.crewcloud.apps.crewchat.domain.model.CheckSSL
+import com.crewcloud.apps.crewchat.domain.model.Result
 import com.crewcloud.apps.crewchat.domain.model.User
 import com.crewcloud.apps.crewchat.domain.repository.AuthRepository
+import com.squareup.moshi.Moshi
 import javax.inject.Inject
 
 /**
@@ -24,7 +30,8 @@ class AuthRepositoryImpl @Inject constructor(
     private val secureLocalStorage: SecureLocalStorage,
     private val staticApiService: StaticApiService,
     private val dazoneApiService: DazoneApiService,
-    private val dataStore: AppPreferenceDataStore
+    private val dataStore: AppPreferenceDataStore,
+    private val moshi: Moshi
 ) :
     AuthRepository {
     override suspend fun getSessionId(): String? {
@@ -41,7 +48,7 @@ class AuthRepositoryImpl @Inject constructor(
             userID = userName,
             password = password
         )
-         when (val result = safeApiCall { dazoneApiService.loginV5(request) }) {
+        when (val result = safeApiCall { dazoneApiService.loginV5(request) }) {
             is Result.Failure -> return result
             is Result.ResultSuccess -> {
                 if (result.result.d.success == 0) {
@@ -66,7 +73,7 @@ class AuthRepositoryImpl @Inject constructor(
             password = password
         )
 
-         when (val result = safeApiCall { dazoneApiService.loginCrewChat(request) }) {
+        when (val result = safeApiCall { dazoneApiService.loginCrewChat(request) }) {
             is Result.Failure -> return result
             is Result.ResultSuccess -> {
                 if (result.result.d.success == 0) {
@@ -101,6 +108,88 @@ class AuthRepositoryImpl @Inject constructor(
             }) {
             is Result.Failure -> result
             is Result.ResultSuccess -> Result.ResultSuccess(result = result.result.d.data.toDomain())
+        }
+    }
+
+    override suspend fun checkApiDeviceAccess(domain: String): Result<CheckApi> {
+        return when (val result =
+            safeApiCall {
+                staticApiService.checkApi(
+                    CheckApiRequest(
+                        domain = domain,
+                        apiName = CheckApiRequest.MOBILE_DEVICES_ACCESS
+                    )
+                )
+            }) {
+            is Result.Failure -> result
+            is Result.ResultSuccess -> Result.ResultSuccess(result = result.result.d.data.toDomain())
+        }
+    }
+
+    override suspend fun checkDeviceAccess(androidId: String): Result<Boolean> {
+        val request = CheckDeviceAccessRequest(
+            sessionId = getSessionId() ?: "",
+            mobileDeviceId = dataStore.getFCMToken() ?: "",
+            mobileUUID = androidId
+        )
+        val result = safeApiCall { dazoneApiService.checkDevicesAccess(request) }
+
+        return when (result) {
+            is Result.Failure -> result
+            is Result.ResultSuccess -> {
+                if(result.result.d.success == 0) {
+                    return Result.Failure(appError = AppError(error = result.result.d.error?.message ?: ""))
+                }
+
+                Result.ResultSuccess(result = true)
+            }
+        }
+    }
+
+    override suspend fun insertAndroidDevice(): Result<Boolean> {
+        val enableNotification = dataStore.getEnableNotification()
+        val enableSound = dataStore.getEnableSound()
+        val enableVibrate = dataStore.getEnableVibrate()
+        val enableTime = dataStore.getEnableTime()
+        val isEnableNotificationWhenUsingPcVersion = dataStore.getEnableNotificationWhenUsingPC()
+
+        val startHour = dataStore.getStartNotificationHour()
+        val startMinute = dataStore.getStartNotificationMinutes()
+        val endHour = dataStore.getEndNotificationHour()
+        val endMinute = dataStore.getEndNotificationMinutes()
+
+        val notificationOptions = NotificationOptions(
+            enabled = enableNotification,
+            sound = enableSound,
+            vibrate = enableVibrate,
+            notificationTime = enableTime,
+            startTime = timeToStringNotAMPM(startHour, startMinute),
+            endTime = timeToStringNotAMPM(endHour, endMinute),
+        )
+
+        val adapter = moshi.adapter(NotificationOptions::class.java)
+        val adapterWrapper = moshi.adapter(WrapperNotificationOptions::class.java)
+        val regJson = notificationOptions.copy(confirmOnline = isEnableNotificationWhenUsingPcVersion)
+        val wrapperNotificationOptions = WrapperNotificationOptions(
+            deviceID = dataStore.getFCMToken()?: "",
+            notificationOptions = regJson
+        )
+
+        val request = UpdateNotificationRequest(
+            sessionId = secureLocalStorage.getSessionId() ?: "",
+            notificationOptions = adapter.toJson(notificationOptions),
+            reqJson = adapterWrapper.toJson(wrapperNotificationOptions),
+        )
+
+        return when (val result = safeApiCall { dazoneApiService.insertAndroidDevice(request) }) {
+            is Result.Failure -> result
+            is Result.ResultSuccess -> {
+                if(result.result.d.success) {
+                    return Result.ResultSuccess(true)
+                }
+
+                Result.Failure(appError = AppError(error = "Insert Device Token Failure!"))
+            }
         }
     }
 
@@ -146,5 +235,9 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun getPassword(): String? {
         return secureLocalStorage.getPassword()
+    }
+
+    override suspend fun clearSession() {
+        secureLocalStorage.clearSession()
     }
 }
