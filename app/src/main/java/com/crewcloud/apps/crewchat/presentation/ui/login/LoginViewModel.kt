@@ -1,10 +1,10 @@
 package com.crewcloud.apps.crewchat.presentation.ui.login
 
-import android.provider.Settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crewcloud.apps.crewchat.domain.model.Result
 import com.crewcloud.apps.crewchat.domain.usecase.LoginUseCase
+import com.crewcloud.apps.crewchat.presentation.core.model.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,9 +20,9 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-) : ViewModel() {
-    private val _uiState = MutableStateFlow(LoginUiState())
-    val uiState = _uiState.asStateFlow()
+) : BaseViewModel() {
+    private val _loginUiState = MutableStateFlow(LoginUiState())
+    val loginUiState = _loginUiState.asStateFlow()
 
     private val _uiEvent = MutableSharedFlow<LoginEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
@@ -32,35 +32,33 @@ class LoginViewModel @Inject constructor(
         val userName = loginUseCase.getUserName()
         val password = loginUseCase.getPassword()
 
-        _uiState.update {
+        _loginUiState.update {
             it.copy(domain = domain ?: "", userName = userName ?: "", password = password ?: "")
         }
     }
 
     fun onDomainChanged(value: String) {
-        _uiState.update { it.copy(domain = value) }
+        _loginUiState.update { it.copy(domain = value) }
     }
 
     fun onUserNameChanged(value: String) {
-        _uiState.update { it.copy(userName = value) }
+        _loginUiState.update { it.copy(userName = value) }
     }
 
     fun onPasswordChanged(value: String) {
-        _uiState.update { it.copy(password = value) }
+        _loginUiState.update { it.copy(password = value) }
     }
 
     fun onLogin(androidId: String) = viewModelScope.launch {
-        val domain = _uiState.value.domain
-        val userName = _uiState.value.userName
-        val password = _uiState.value.password
+        val domain = _loginUiState.value.domain
+        val userName = _loginUiState.value.userName
+        val password = _loginUiState.value.password
 
-        if (_uiState.value.isEmpty) {
+        if (_loginUiState.value.isEmpty) {
             _uiEvent.emit(LoginEvent.LoginError("Please enter your information"))
         } else {
             try {
-                _uiState.update {
-                    it.copy(isLoading = true)
-                }
+                _uiState.update { it.copy(isLoading = true) }
 
                 when (val result =
                     loginUseCase(domain = domain, userName = userName, password = password, androidId = androidId)) {

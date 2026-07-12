@@ -1,0 +1,423 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "633b33026d7c3fa386b9797953e46625",
+    "entities": [
+      {
+        "tableName": "user",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` TEXT NOT NULL, `fullName` TEXT NOT NULL, `id` INTEGER NOT NULL, `avatarUrl` TEXT NOT NULL, `permissionType` INTEGER NOT NULL, `companyName` TEXT NOT NULL, `mailAddress` TEXT NOT NULL, `companyLocations` TEXT NOT NULL, `companyNo` INTEGER NOT NULL, PRIMARY KEY(`userId`))",
+        "fields": [
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fullName",
+            "columnName": "fullName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avatarUrl",
+            "columnName": "avatarUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "permissionType",
+            "columnName": "permissionType",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "companyName",
+            "columnName": "companyName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mailAddress",
+            "columnName": "mailAddress",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "companyLocations",
+            "columnName": "companyLocations",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "companyNo",
+            "columnName": "companyNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "userId"
+          ]
+        }
+      },
+      {
+        "tableName": "departments",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`departNo` INTEGER NOT NULL, `modUserNo` INTEGER NOT NULL, `modDate` TEXT NOT NULL, `parentNo` INTEGER NOT NULL, `nameDefault` TEXT NOT NULL, `nameEN` TEXT NOT NULL, `nameCH` TEXT NOT NULL, `nameJP` TEXT NOT NULL, `nameVN` TEXT NOT NULL, `name` TEXT NOT NULL, `shortName` TEXT NOT NULL, `sortNo` INTEGER NOT NULL, `enable` INTEGER NOT NULL, `senderName` TEXT NOT NULL, `isExpanded` INTEGER NOT NULL, PRIMARY KEY(`departNo`))",
+        "fields": [
+          {
+            "fieldPath": "departNo",
+            "columnName": "departNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modUserNo",
+            "columnName": "modUserNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modDate",
+            "columnName": "modDate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parentNo",
+            "columnName": "parentNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameDefault",
+            "columnName": "nameDefault",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameEN",
+            "columnName": "nameEN",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameCH",
+            "columnName": "nameCH",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameJP",
+            "columnName": "nameJP",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameVN",
+            "columnName": "nameVN",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shortName",
+            "columnName": "shortName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sortNo",
+            "columnName": "sortNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "enable",
+            "columnName": "enable",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "senderName",
+            "columnName": "senderName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isExpanded",
+            "columnName": "isExpanded",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "departNo"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_departments_parentNo",
+            "unique": false,
+            "columnNames": [
+              "parentNo"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_departments_parentNo` ON `${TABLE_NAME}` (`parentNo`)"
+          },
+          {
+            "name": "index_departments_sortNo",
+            "unique": false,
+            "columnNames": [
+              "sortNo"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_departments_sortNo` ON `${TABLE_NAME}` (`sortNo`)"
+          }
+        ]
+      },
+      {
+        "tableName": "employees",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userDepNo` TEXT NOT NULL, `userNo` INTEGER NOT NULL, `modUserNo` INTEGER NOT NULL, `modDate` TEXT NOT NULL, `userId` TEXT NOT NULL, `passwordChangeDate` TEXT NOT NULL, `nameDefault` TEXT NOT NULL, `nameEn` TEXT NOT NULL, `nameCh` TEXT NOT NULL, `nameJp` TEXT NOT NULL, `nameVn` TEXT NOT NULL, `name` TEXT NOT NULL, `mailAddress` TEXT NOT NULL, `sex` INTEGER NOT NULL, `cellPhone` TEXT NOT NULL, `companyPhone` TEXT NOT NULL, `extensionNumber` TEXT NOT NULL, `entranceDateBool` INTEGER NOT NULL, `birthDateBool` INTEGER NOT NULL, `birthDateType` INTEGER NOT NULL, `userPhoto` INTEGER NOT NULL, `photo` TEXT NOT NULL, `isEnabled` INTEGER NOT NULL, `isVirtual` INTEGER NOT NULL, `departNo` INTEGER NOT NULL, `departName` TEXT NOT NULL, `departSortNo` INTEGER NOT NULL, `positionNo` INTEGER NOT NULL, `positionName` TEXT NOT NULL, `positionSortNo` INTEGER NOT NULL, `dutyNo` INTEGER NOT NULL, `dutyName` TEXT NOT NULL, `dutySortNo` INTEGER NOT NULL, `nameAndUserId` TEXT NOT NULL, `avatarUrl` TEXT NOT NULL, PRIMARY KEY(`userDepNo`))",
+        "fields": [
+          {
+            "fieldPath": "userDepNo",
+            "columnName": "userDepNo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userNo",
+            "columnName": "userNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modUserNo",
+            "columnName": "modUserNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modDate",
+            "columnName": "modDate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "passwordChangeDate",
+            "columnName": "passwordChangeDate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameDefault",
+            "columnName": "nameDefault",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameEn",
+            "columnName": "nameEn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameCh",
+            "columnName": "nameCh",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameJp",
+            "columnName": "nameJp",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameVn",
+            "columnName": "nameVn",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mailAddress",
+            "columnName": "mailAddress",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sex",
+            "columnName": "sex",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cellPhone",
+            "columnName": "cellPhone",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "companyPhone",
+            "columnName": "companyPhone",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "extensionNumber",
+            "columnName": "extensionNumber",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "entranceDateBool",
+            "columnName": "entranceDateBool",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "birthDateBool",
+            "columnName": "birthDateBool",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "birthDateType",
+            "columnName": "birthDateType",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userPhoto",
+            "columnName": "userPhoto",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "photo",
+            "columnName": "photo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isEnabled",
+            "columnName": "isEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isVirtual",
+            "columnName": "isVirtual",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "departNo",
+            "columnName": "departNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "departName",
+            "columnName": "departName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "departSortNo",
+            "columnName": "departSortNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "positionNo",
+            "columnName": "positionNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "positionName",
+            "columnName": "positionName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "positionSortNo",
+            "columnName": "positionSortNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dutyNo",
+            "columnName": "dutyNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dutyName",
+            "columnName": "dutyName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dutySortNo",
+            "columnName": "dutySortNo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameAndUserId",
+            "columnName": "nameAndUserId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avatarUrl",
+            "columnName": "avatarUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "userDepNo"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '633b33026d7c3fa386b9797953e46625')"
+    ]
+  }
+}

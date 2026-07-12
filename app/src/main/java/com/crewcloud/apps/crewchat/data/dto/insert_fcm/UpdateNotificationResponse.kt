@@ -1,14 +1,17 @@
 package com.crewcloud.apps.crewchat.data.dto.insert_fcm
 
-import com.crewcloud.apps.crewchat.data.dto.base.Data
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Created by BM Anderson on 5/7/26.
  */
+@Serializable
 data class UpdateNotificationResponse(
-    val d: DataInsert
+    @SerialName("d") val d: DataInsert
 )
 
+@Serializable
 data class DataInsert(
-    val success: Boolean
+    @SerialName("success") val success: Boolean
 )

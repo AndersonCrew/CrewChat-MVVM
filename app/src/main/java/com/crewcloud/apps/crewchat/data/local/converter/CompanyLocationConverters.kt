@@ -2,24 +2,32 @@ package com.crewcloud.apps.crewchat.data.local.converter
 
 import androidx.room.TypeConverter
 import com.crewcloud.apps.crewchat.data.local.entity.CompanyLocationEntity
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
+import kotlinx.serialization.json.Json
 
 /**
  * Created by BM Anderson on 3/7/26.
  */
+
 class CompanyLocationConverters {
-    private val moshi = Moshi.Builder().build()
-    private val type = Types.newParameterizedType(List::class.java, CompanyLocationEntity::class.java)
-    private val adapter = moshi.adapter<List<CompanyLocationEntity>>(type)
+
+    // Khởi tạo một đối tượng Json dùng chung (có thể bật ignoreUnknownKeys nếu cần)
+    private val json = Json {
+        ignoreUnknownKeys = true
+    }
 
     @TypeConverter
     fun fromString(value: String?): List<CompanyLocationEntity>? {
-        return value?.let { adapter.fromJson(it) }
+        if (value.isNullOrEmpty()) return emptyList()
+        return try {
+            json.decodeFromString<List<CompanyLocationEntity>>(value)
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 
     @TypeConverter
     fun fromList(list: List<CompanyLocationEntity>?): String? {
-        return adapter.toJson(list)
+        if (list == null) return null
+        return json.encodeToString(list)
     }
 }

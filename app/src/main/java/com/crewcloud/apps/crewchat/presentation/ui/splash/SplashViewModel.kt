@@ -3,6 +3,7 @@ package com.crewcloud.apps.crewchat.presentation.ui.splash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crewcloud.apps.crewchat.domain.repository.AuthRepository
+import com.crewcloud.apps.crewchat.presentation.core.model.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -16,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val authRepository: AuthRepository
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _uiEvent = Channel<SplashEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -28,5 +29,17 @@ class SplashViewModel @Inject constructor(
         } else {
             _uiEvent.send(SplashEvent.NavigateToHome)
         }
+    }
+
+    fun check() = viewModelScope.launch {
+        launch {
+            delay(1000)
+            print("A")
+        }
+
+        launch { throw Exception() }
+        print("Done")
+
+
     }
 }

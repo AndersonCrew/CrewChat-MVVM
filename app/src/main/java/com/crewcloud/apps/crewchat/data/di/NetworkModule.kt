@@ -8,16 +8,16 @@ import com.crewcloud.apps.crewchat.data.network.DazoneOkhttp
 import com.crewcloud.apps.crewchat.data.network.DazoneRetrofit
 import com.crewcloud.apps.crewchat.data.network.StaticOkhttp
 import com.crewcloud.apps.crewchat.data.network.StaticRetrofit
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 /**
@@ -27,11 +27,16 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    @Provides
-    @Singleton
-    fun provideMoshi(): Moshi {
-        return Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+    val jsonConfig = Json {
+        ignoreUnknownKeys = true // Rất quan trọng! API thừa trường so với DTO cũng không bị crash
+        coerceInputValues =
+            true // Nếu API trả về null ở trường không cho phép null, nó tự lấy giá trị mặc định
+        encodeDefaults =
+            true    // Tự động thêm các giá trị mặc định vào chuỗi JSON khi convert xuôi
     }
+
+    // 2. Định nghĩa Content-Type là application/json
+    val contentType = "application/json".toMediaType()
 
     @Provides
     @Singleton
@@ -68,22 +73,23 @@ object NetworkModule {
     @Singleton
     @StaticRetrofit
     fun provideStaticRetrofit(
-        moshi: Moshi, @StaticOkhttp okHttpClient: OkHttpClient
+        @StaticOkhttp okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl("http://mobileupdate.crewcloud.net/WebServiceMobile.asmx/")
-            .addConverterFactory(MoshiConverterFactory.create(moshi)).client(okHttpClient).build()
+            .addConverterFactory(jsonConfig.asConverterFactory(contentType))
+            .client(okHttpClient).build()
     }
 
     @Provides
     @Singleton
     @DazoneRetrofit
     fun provideDazoneRetrofit(
-        moshi: Moshi,
         @DazoneOkhttp okHttpClient: OkHttpClient,
     ): Retrofit {
         return Retrofit.Builder().baseUrl("https://localhost.com/")
-            .addConverterFactory(MoshiConverterFactory.create(moshi)).client(okHttpClient).build()
+            .addConverterFactory(jsonConfig.asConverterFactory(contentType)).client(okHttpClient)
+            .build()
     }
 
     @Provides

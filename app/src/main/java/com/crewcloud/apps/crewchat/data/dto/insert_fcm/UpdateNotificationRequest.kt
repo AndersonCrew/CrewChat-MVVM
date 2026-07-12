@@ -1,14 +1,14 @@
 package com.crewcloud.apps.crewchat.data.dto.insert_fcm
 
 import com.crewcloud.apps.crewchat.data.dto.base.getTimezoneOffsetInMinutes
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 import java.util.Locale
 
 /**
  * Created by BM Anderson on 5/7/26.
  */
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class UpdateNotificationRequest(
     val command: String = "InsertDevice",
     val sessionId: String,

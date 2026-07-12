@@ -20,7 +20,7 @@ import com.crewcloud.apps.crewchat.domain.model.CheckSSL
 import com.crewcloud.apps.crewchat.domain.model.Result
 import com.crewcloud.apps.crewchat.domain.model.User
 import com.crewcloud.apps.crewchat.domain.repository.AuthRepository
-import com.squareup.moshi.Moshi
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 /**
@@ -31,7 +31,6 @@ class AuthRepositoryImpl @Inject constructor(
     private val staticApiService: StaticApiService,
     private val dazoneApiService: DazoneApiService,
     private val dataStore: AppPreferenceDataStore,
-    private val moshi: Moshi
 ) :
     AuthRepository {
     override suspend fun getSessionId(): String? {
@@ -51,7 +50,7 @@ class AuthRepositoryImpl @Inject constructor(
         when (val result = safeApiCall { dazoneApiService.loginV5(request) }) {
             is Result.Failure -> return result
             is Result.ResultSuccess -> {
-                if (result.result.d.success == 0) {
+                if (!result.result.d.success) {
                     val error = result.result.d.error?.message ?: "Unknown Error"
                     return Result.Failure(appError = AppError(error = error))
                 }
@@ -76,7 +75,7 @@ class AuthRepositoryImpl @Inject constructor(
         when (val result = safeApiCall { dazoneApiService.loginCrewChat(request) }) {
             is Result.Failure -> return result
             is Result.ResultSuccess -> {
-                if (result.result.d.success == 0) {
+                if (!result.result.d.success) {
                     val error = result.result.d.error?.message ?: "Unknown Error"
                     return Result.Failure(appError = AppError(error = error))
 
@@ -137,7 +136,7 @@ class AuthRepositoryImpl @Inject constructor(
         return when (result) {
             is Result.Failure -> result
             is Result.ResultSuccess -> {
-                if(result.result.d.success == 0) {
+                if(!result.result.d.success) {
                     return Result.Failure(appError = AppError(error = result.result.d.error?.message ?: ""))
                 }
 
@@ -167,8 +166,6 @@ class AuthRepositoryImpl @Inject constructor(
             endTime = timeToStringNotAMPM(endHour, endMinute),
         )
 
-        val adapter = moshi.adapter(NotificationOptions::class.java)
-        val adapterWrapper = moshi.adapter(WrapperNotificationOptions::class.java)
         val regJson = notificationOptions.copy(confirmOnline = isEnableNotificationWhenUsingPcVersion)
         val wrapperNotificationOptions = WrapperNotificationOptions(
             deviceID = dataStore.getFCMToken()?: "",
@@ -177,8 +174,8 @@ class AuthRepositoryImpl @Inject constructor(
 
         val request = UpdateNotificationRequest(
             sessionId = secureLocalStorage.getSessionId() ?: "",
-            notificationOptions = adapter.toJson(notificationOptions),
-            reqJson = adapterWrapper.toJson(wrapperNotificationOptions),
+            notificationOptions = Json.encodeToString(notificationOptions),
+            reqJson = Json.encodeToString(wrapperNotificationOptions),
         )
 
         return when (val result = safeApiCall { dazoneApiService.insertAndroidDevice(request) }) {

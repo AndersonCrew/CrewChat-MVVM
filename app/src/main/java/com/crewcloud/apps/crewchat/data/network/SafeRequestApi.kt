@@ -3,6 +3,7 @@ package com.crewcloud.apps.crewchat.data.network
 import com.crewcloud.apps.crewchat.domain.model.Result
 import com.crewcloud.apps.crewchat.domain.model.mapThrowableToAppError
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by BM Anderson on 3/7/26.

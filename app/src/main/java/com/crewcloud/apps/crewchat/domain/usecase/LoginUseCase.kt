@@ -111,7 +111,8 @@ class LoginUseCase @Inject constructor(
             return result
         }
 
-        return insertAndroidDevice(user)
+        //return insertAndroidDevice(user)
+        return Result.ResultSuccess(result = user)
     }
 
     suspend fun insertAndroidDevice(user: User): Result<User> {

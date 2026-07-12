@@ -1,15 +1,16 @@
 package com.crewcloud.apps.crewchat.data.dto.check_api
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
 
 /**
  * Created by BM Anderson on 3/7/26.
  */
-@JsonClass(generateAdapter = true)
+@Serializable
 data class CheckApiDTO(
-    @param:Json(name = "API")
-    val api: Boolean? = false
+    @SerialName("API")
+    private val api: Boolean? = false
 ) {
     val apiValue: Boolean
         get() = api ?: false

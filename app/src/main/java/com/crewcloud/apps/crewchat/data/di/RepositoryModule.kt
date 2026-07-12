@@ -1,9 +1,13 @@
 package com.crewcloud.apps.crewchat.data.di
 
 import com.crewcloud.apps.crewchat.data.repository.AuthRepositoryImpl
+import com.crewcloud.apps.crewchat.data.repository.ChattingRepositoryImpl
+import com.crewcloud.apps.crewchat.data.repository.DepartmentRepositoryImpl
 import com.crewcloud.apps.crewchat.data.repository.NotificationRepositoryImpl
 import com.crewcloud.apps.crewchat.data.repository.UserRepositoryImpl
 import com.crewcloud.apps.crewchat.domain.repository.AuthRepository
+import com.crewcloud.apps.crewchat.domain.repository.ChattingRepository
+import com.crewcloud.apps.crewchat.domain.repository.DepartmentRepository
 import com.crewcloud.apps.crewchat.domain.repository.NotificationRepository
 import com.crewcloud.apps.crewchat.domain.repository.UserRepository
 import dagger.Binds
@@ -36,4 +40,16 @@ interface RepositoryModule {
     abstract fun bindNotificationRepository(
         impl: NotificationRepositoryImpl
     ): NotificationRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindDepartmentRepository(
+        impl: DepartmentRepositoryImpl
+    ): DepartmentRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindChattingRepository(
+        impl: ChattingRepositoryImpl
+    ): ChattingRepository
 }

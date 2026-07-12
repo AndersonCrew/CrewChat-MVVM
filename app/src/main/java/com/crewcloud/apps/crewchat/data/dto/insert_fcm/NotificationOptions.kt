@@ -1,32 +1,33 @@
 package com.crewcloud.apps.crewchat.data.dto.insert_fcm
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Created by BM Anderson on 5/7/26.
  */
-@JsonClass(generateAdapter = true)
+@Serializable
 data class NotificationOptions(
     val enabled: Boolean,
     val sound: Boolean,
     val vibrate: Boolean,
-    @param:Json(name = "notitime")
+    @SerialName("notitime")
     val notificationTime: Boolean,
-    @param:Json(name = "starttime")
+    @SerialName("starttime")
     val startTime: String,
-    @param:Json(name = "endtime")
+    @SerialName("endtime")
     val endTime: String,
-    @param:Json(name = "confirmonline")
+    @SerialName("confirmonline")
     val confirmOnline: Boolean?= null,
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class WrapperNotificationOptions(
-    @param:Json(name = "DeviceType")
+    @SerialName("DeviceType")
     val deviceType: String = "Android",
-    @param:Json(name = "DeviceID")
+    @SerialName("DeviceID")
     val deviceID: String,
-    @param:Json(name = "NotifcationOptions")
+    @SerialName("NotifcationOptions")
     val notificationOptions: NotificationOptions
 )

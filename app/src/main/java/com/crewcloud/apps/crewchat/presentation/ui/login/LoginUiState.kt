@@ -9,7 +9,6 @@ data class LoginUiState(
     val domain: String = "",
     val userName: String = "",
     val password: String = "",
-    val isLoading: Boolean = false
 ) {
     val isEmpty: Boolean = domain.isEmpty() || userName.isEmpty() || password.isEmpty()
 }

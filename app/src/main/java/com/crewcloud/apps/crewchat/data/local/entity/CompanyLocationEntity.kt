@@ -2,12 +2,12 @@ package com.crewcloud.apps.crewchat.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
 /**
  * Created by BM Anderson on 3/7/26.
  */
-@JsonClass(generateAdapter = true)
+@Serializable
 @Entity(tableName = "company-location")
 data class CompanyLocationEntity(
     @PrimaryKey(autoGenerate = true)

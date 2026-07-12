@@ -1,16 +1,17 @@
 package com.crewcloud.apps.crewchat.data.dto.check_ssl
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
 
 /**
  * Created by BM Anderson on 3/7/26.
  */
-@JsonClass(generateAdapter = true)
+@Serializable
 data class CheckSSLRequest(
-    @param:Json(name = "Domain")
+    @SerialName("Domain")
     val domain: String,
 
-    @param:Json(name = "Applications")
+    @SerialName("Applications")
     val applications: String = "CrewChat",
 )

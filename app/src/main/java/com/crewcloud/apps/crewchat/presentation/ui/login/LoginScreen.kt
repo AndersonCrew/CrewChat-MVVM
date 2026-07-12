@@ -21,7 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +37,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -48,7 +46,6 @@ import com.crewcloud.apps.crewchat.presentation.core.component.DazoneDialog
 import com.crewcloud.apps.crewchat.presentation.core.component.LoadingDialog
 import com.crewcloud.apps.crewchat.presentation.core.theme.ColorHint
 import com.crewcloud.apps.crewchat.presentation.core.theme.ColorWhite
-import com.crewcloud.apps.crewchat.presentation.core.theme.CrewChatMVVMTheme
 import com.crewcloud.apps.crewchat.presentation.core.theme.CrewFontFamily
 import com.crewcloud.apps.crewchat.presentation.core.theme.Dimen.ButtonHeight
 
@@ -61,6 +58,7 @@ fun LoginScreen(
     onNavigateToHome: () -> Unit
 ) {
     val viewModel: LoginViewModel = hiltViewModel()
+    val loginUiState by viewModel.loginUiState.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
     var dialogMessage by remember { mutableStateOf<String?>(null) }
@@ -122,7 +120,7 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(52.dp),
-                    value = uiState.domain,
+                    value = loginUiState.domain,
                     shape = RoundedCornerShape(8.dp),
                     onValueChange = viewModel::onDomainChanged,
                     placeholder = {
@@ -155,7 +153,7 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(52.dp),
-                    value = uiState.userName,
+                    value = loginUiState.userName,
                     shape = RoundedCornerShape(8.dp),
                     onValueChange = viewModel::onUserNameChanged,
                     placeholder = {
@@ -188,7 +186,7 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(52.dp),
-                    value = uiState.password,
+                    value = loginUiState.password,
                     shape = RoundedCornerShape(8.dp),
                     onValueChange = viewModel::onPasswordChanged,
                     placeholder = {

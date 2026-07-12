@@ -2,30 +2,30 @@ package com.crewcloud.apps.crewchat.data.dto.login
 
 import android.os.Build
 import com.crewcloud.apps.crewchat.data.dto.base.getTimezoneOffsetInMinutes
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import java.util.Locale
 
 /**
  * Created by BM Anderson on 3/7/26.
  */
-@JsonClass(generateAdapter = true)
+@Serializable
 data class LoginRequest(
-    @param:Json(name = "companyDomain")
+    @SerialName("companyDomain")
     val companyDomain: String,
 
-    @param:Json(name = "languageCode")
+    @SerialName("languageCode")
     val languageCode: String = Locale.getDefault().language.uppercase(Locale.getDefault()),
 
-    @param:Json(name = "timeZoneOffset")
+    @SerialName("timeZoneOffset")
     val timeZoneOffset: String = getTimezoneOffsetInMinutes(),
 
-    @param:Json(name = "userID")
+    @SerialName("userID")
     val userID: String,
 
-    @param:Json(name = "password")
+    @SerialName("password")
     val password: String,
 
-    @param:Json(name = "mobileOSVersion")
+    @SerialName("mobileOSVersion")
     val mobileOSVersion: String = Build.VERSION.RELEASE
 )

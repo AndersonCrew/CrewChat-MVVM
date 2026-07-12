@@ -1,11 +1,13 @@
 package com.crewcloud.apps.crewchat.data.dto.check_device_access
 
 import com.crewcloud.apps.crewchat.data.dto.base.getTimezoneOffsetInMinutes
+import kotlinx.serialization.Serializable
 import java.util.Locale
 
 /**
  * Created by BM Anderson on 5/7/26.
  */
+@Serializable
 data class CheckDeviceAccessRequest(
     val sessionId: String,
     val languageCode: String = Locale.getDefault().language.uppercase(Locale.getDefault()),

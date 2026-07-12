@@ -1,58 +1,59 @@
 package com.crewcloud.apps.crewchat.data.dto.login
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Created by BM Anderson on 3/7/26.
  */
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class UserDTO(
-    @param:Json(name = "userID")
+    @SerialName("userID")
     val userId: String? = "",
 
-    @param:Json(name = "FullName")
+    @SerialName("FullName")
     val fullName: String? = "",
 
-    @param:Json(name = "Id")
+    @SerialName("Id")
     val id: Int? = 0,
 
-    @param:Json(name = "session")
+    @SerialName("session")
     val session: String? = "",
 
-    @param:Json(name = "avatar")
+    @SerialName("avatar")
     val avatar: String? = "",
 
-    @param:Json(name = "PermissionType")
+    @SerialName("PermissionType")
     val permissionType: Int? = 0,
 
-    @param:Json(name = "NameCompany")
+    @SerialName("NameCompany")
     val nameCompany: String? = "",
 
-    @param:Json(name = "MailAddress")
+    @SerialName("MailAddress")
     val mailAddress: String? = "",
 
-    @param:Json(name = "informationcompany")
+    @SerialName("informationcompany")
     val informationCompany: List<CompanyLocationDTO>? = emptyList(),
 
-    @param:Json(name = "CrewDDSServerIP")
+    @SerialName("CrewDDSServerIP")
     val crewDdsServerIp: String? = "",
 
-    @param:Json(name = "CrewDDSServerPort")
+    @SerialName("CrewDDSServerPort")
     val crewDdsServerPort: Int? = 0,
 
-    @param:Json(name = "CrewChatFileServerIP")
+    @SerialName("CrewChatFileServerIP")
     val crewChatFileServerIp: String? = "",
 
-    @param:Json(name = "CrewChatUseReadCount")
+    @SerialName("CrewChatUseReadCount")
     val crewChatUseReadCount: Boolean? = false,
 
-    @param:Json(name = "CrewChatFileServerPort")
+    @SerialName("CrewChatFileServerPort")
     val crewChatFileServerPort: Int? = 0,
 
-    @param:Json(name = "CrewChatLocalDatabase")
+    @SerialName("CrewChatLocalDatabase")
     val crewChatLocalDatabase: Boolean? = false,
 
-    @param:Json(name = "CompanyNo")
+    @SerialName("CompanyNo")
     val companyNo: Int? = 0
 )

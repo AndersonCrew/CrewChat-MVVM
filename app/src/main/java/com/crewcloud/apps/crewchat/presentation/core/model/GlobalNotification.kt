@@ -1,4 +1,4 @@
-package com.crewcloud.apps.crewchat.presentation.core.viewmodel
+package com.crewcloud.apps.crewchat.presentation.core.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

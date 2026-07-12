@@ -8,6 +8,7 @@ import java.io.IOException
  */
 
 sealed class Result <out T>{
+
     data class ResultSuccess<T>(
         val result: T
     ): Result<T>()

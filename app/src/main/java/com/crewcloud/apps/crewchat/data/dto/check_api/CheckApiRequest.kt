@@ -1,23 +1,24 @@
 package com.crewcloud.apps.crewchat.data.dto.check_api
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
 
 /**
  * Created by BM Anderson on 3/7/26.
  */
-@JsonClass(generateAdapter = true)
+@Serializable
 data class CheckApiRequest(
-    @param:Json(name = "Domain")
+    @SerialName("Domain")
     val domain: String,
 
-    @param:Json(name = "Applications")
+    @SerialName("Applications")
     val applications: String = "CrewChat",
 
-    @param:Json(name = "Mobile_OS")
+    @SerialName("Mobile_OS")
     val mobileOS: String = "Android",
 
-    @param:Json(name = "ApiName")
+    @SerialName("ApiName")
     val apiName: String
 ) {
     companion object ApiNameCheck {
