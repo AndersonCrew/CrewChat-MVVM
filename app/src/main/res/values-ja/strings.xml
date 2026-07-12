@@ -300,6 +300,7 @@
     <string name="done_new">Done</string>
     <string name="image_box_title">이미지 파일 박스</string>
 
+    <string name="default_notification_channel_id">Crewchat Notification Channel</string>
     <string name="record_start_failed">録音を開始できません。マイクの権限を確認してください。</string>
     <string name="record_stop_failed">録音を停止できません。もう一度お試しください。</string>
     <string name="audio_file_not_ready">音声ファイルの準備ができていません。</string>

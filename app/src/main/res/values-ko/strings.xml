@@ -298,6 +298,7 @@
     <string name="done_new">확인</string>
     <string name="image_box_title">이미지 파일 박스</string>
 
+    <string name="default_notification_channel_id">Crewchat Notification Channel</string>
     <string name="record_start_failed">녹음을 시작할 수 없습니다. 마이크 권한을 확인하세요.</string>
     <string name="record_stop_failed">녹음을 중지할 수 없습니다. 다시 시도하세요.</string>
     <string name="audio_file_not_ready">오디오 파일이 아직 준비되지 않았습니다.</string>

@@ -296,6 +296,7 @@
     <string name="done_new">Done</string>
     <string name="image_box_title">이미지 파일 박스</string>
 
+    <string name="default_notification_channel_id">Crewchat Notification Channel</string>
     <string name="record_start_failed">Không thể bắt đầu ghi âm. Vui lòng kiểm tra quyền micro.</string>
     <string name="record_stop_failed">Không thể dừng ghi âm. Vui lòng thử lại.</string>
     <string name="audio_file_not_ready">Tệp âm thanh chưa sẵn sàng.</string>

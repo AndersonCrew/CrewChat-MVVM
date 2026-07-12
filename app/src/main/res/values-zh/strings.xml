@@ -275,6 +275,7 @@
     <string name="done_new">Done</string>
     <string name="image_box_title">이미지 파일 박스</string>
 
+    <string name="default_notification_channel_id">Crewchat Notification Channel</string>
     <string name="record_start_failed">无法开始录音。请检查麦克风权限。</string>
     <string name="record_stop_failed">无法停止录音。请重试。</string>
     <string name="audio_file_not_ready">音频文件尚未准备好。</string>
