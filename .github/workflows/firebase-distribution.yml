@@ -44,6 +44,11 @@ jobs:
         run: |
           echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > release.keystore
 
+      - name: Decode google-services.json
+        run: echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > app/google-services.json
+        env:
+         GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
+
       - name: Build APK
         env:
           ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/release.keystore
