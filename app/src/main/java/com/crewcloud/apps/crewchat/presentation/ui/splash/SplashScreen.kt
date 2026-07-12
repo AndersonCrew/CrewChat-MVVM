@@ -33,7 +33,7 @@ fun SplashScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.check()
+        viewModel.checkAuthentication()
     }
 
     Scaffold(modifier = Modifier.fillMaxSize().background(ColorWhite)) { innerPadding ->

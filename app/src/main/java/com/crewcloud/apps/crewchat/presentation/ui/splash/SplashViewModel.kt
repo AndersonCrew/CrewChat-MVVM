@@ -30,16 +30,4 @@ class SplashViewModel @Inject constructor(
             _uiEvent.send(SplashEvent.NavigateToHome)
         }
     }
-
-    fun check() = viewModelScope.launch {
-        launch {
-            delay(1000)
-            print("A")
-        }
-
-        launch { throw Exception() }
-        print("Done")
-
-
-    }
 }
