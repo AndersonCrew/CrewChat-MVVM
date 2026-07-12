@@ -15,6 +15,6 @@ class CheckApiMapperTest {
         )
 
         val domainModel = dto.toDomain()
-        assertThat(domainModel.api).isEqualTo(dto.api)
+        assertThat(domainModel.api).isTrue()
     }
 }

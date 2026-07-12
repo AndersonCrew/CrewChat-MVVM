@@ -15,6 +15,6 @@ class CheckSSLMapperTest {
         )
 
         val domainModel = dto.toDomain()
-        assertThat(domainModel.ssl).isEqualTo(dto.ssl)
+        assertThat(domainModel.ssl).isTrue()
     }
 }

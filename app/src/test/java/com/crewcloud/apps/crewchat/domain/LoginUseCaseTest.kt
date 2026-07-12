@@ -1,5 +1,6 @@
 package com.crewcloud.apps.crewchat.domain
 
+import android.util.Log
 import com.crewcloud.apps.crewchat.domain.model.AppError
 import com.crewcloud.apps.crewchat.domain.model.CheckApi
 import com.crewcloud.apps.crewchat.domain.model.CheckSSL
@@ -9,6 +10,8 @@ import com.crewcloud.apps.crewchat.domain.repository.AuthRepository
 import com.crewcloud.apps.crewchat.domain.repository.UserRepository
 import com.crewcloud.apps.crewchat.domain.usecase.LoginUseCase
 import com.google.common.truth.Truth.assertThat
+import io.mockk.every
+import io.mockk.mockkStatic
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -28,6 +31,8 @@ class LoginUseCaseTest {
 
     @Before
     fun setUp() {
+        mockkStatic(Log::class)
+        every { Log.d(any(), any()) } returns 0
         loginUseCase = LoginUseCase(authRepository, userRepository)
     }
 
@@ -92,7 +97,7 @@ class LoginUseCaseTest {
         mockInitialSaveSuccess()
         mockCheckSSL(false)
 
-        val result = loginUseCase.invoke(TEST_DOMAIN, TEST_USERNAME, TEST_PASSWORD)
+        val result = loginUseCase.invoke(TEST_DOMAIN, TEST_USERNAME, TEST_PASSWORD, TEST_ANDROID_ID)
         assertThat(result).isInstanceOf(Result.Failure::class.java)
 
         coVerify(exactly = 1) { authRepository.saveDomain(TEST_DOMAIN) }
@@ -106,7 +111,7 @@ class LoginUseCaseTest {
         mockInitialSaveSuccess()
         mockCheckSSL(true)
         mockCheckLoginApi(value = false, result = false)
-        val result = loginUseCase(TEST_DOMAIN, TEST_USERNAME, TEST_PASSWORD)
+        val result = loginUseCase(TEST_DOMAIN, TEST_USERNAME, TEST_PASSWORD, TEST_ANDROID_ID)
         coVerify(exactly = 1) { authRepository.saveBaseUrl(TEST_BASE_URL) }
         assertThat(result).isInstanceOf(Result.Failure::class.java)
     }
@@ -128,7 +133,7 @@ class LoginUseCaseTest {
         } returns mockResult
 
         //Act
-        val result = loginUseCase(TEST_DOMAIN, TEST_USERNAME, TEST_PASSWORD)
+        val result = loginUseCase(TEST_DOMAIN, TEST_USERNAME, TEST_PASSWORD, TEST_ANDROID_ID)
 
         //Assert
         assertThat(result).isInstanceOf(Result.Failure::class.java)
@@ -167,7 +172,7 @@ class LoginUseCaseTest {
         } returns mockResult
 
         //Act
-        val result = loginUseCase(TEST_DOMAIN, TEST_USERNAME, TEST_PASSWORD)
+        val result = loginUseCase(TEST_DOMAIN, TEST_USERNAME, TEST_PASSWORD, TEST_ANDROID_ID)
 
         //Assert
         assertThat(result).isInstanceOf(Result.Failure::class.java)
@@ -196,6 +201,8 @@ class LoginUseCaseTest {
         coEvery { authRepository.saveFileServerIp(user.crewChatFileServerIp) } returns Unit
         coEvery { authRepository.saveDDSServerPort(user.crewDdsServerPort) } returns Unit
         coEvery { authRepository.saveFileServerPort(user.crewChatFileServerPort) } returns Unit
+        coEvery { authRepository.checkApiDeviceAccess(TEST_DOMAIN) } returns Result.ResultSuccess(CheckApi(api = false))
+        coEvery { authRepository.insertAndroidDevice() } returns Result.ResultSuccess(true)
     }
 
     @Test
@@ -217,7 +224,7 @@ class LoginUseCaseTest {
         } returns mockResult
 
         //Act
-        val result = loginUseCase(TEST_DOMAIN, TEST_USERNAME, TEST_PASSWORD)
+        val result = loginUseCase(TEST_DOMAIN, TEST_USERNAME, TEST_PASSWORD, TEST_ANDROID_ID)
         coVerify(exactly = 1) { userRepository.saveUser(user) }
         coVerify(exactly = 1) { authRepository.saveSessionId(user.session) }
         coVerify(exactly = 1) { authRepository.saveDDSServerIp(user.crewDdsServerIp) }
@@ -249,7 +256,7 @@ class LoginUseCaseTest {
         } returns mockResult
 
         //Act
-        val result = loginUseCase(TEST_DOMAIN, TEST_USERNAME, TEST_PASSWORD)
+        val result = loginUseCase(TEST_DOMAIN, TEST_USERNAME, TEST_PASSWORD, TEST_ANDROID_ID)
         assertThat(result).isInstanceOf(Result.ResultSuccess::class.java)
     }
 
@@ -281,5 +288,6 @@ class LoginUseCaseTest {
         private const val TEST_DOMAIN = "crewcloud.com"
         private const val TEST_USERNAME = "dazone"
         private const val TEST_PASSWORD = "123456"
+        private const val TEST_ANDROID_ID = "android-test-id"
     }
 }

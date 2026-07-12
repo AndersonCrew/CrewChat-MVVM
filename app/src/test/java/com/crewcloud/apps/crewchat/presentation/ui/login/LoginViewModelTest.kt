@@ -35,7 +35,7 @@ class LoginViewModelTest {
         val userName = "anderson"
         val password = "123456"
 
-        viewModel.uiState.test {
+        viewModel.loginUiState.test {
             val initialState = awaitItem()
             assertThat(initialState).isEqualTo(LoginUiState())
 
@@ -54,7 +54,7 @@ class LoginViewModelTest {
     @Test
     fun testOnDomainChanged() = runTest {
         val value = "dazone"
-        viewModel.uiState.test {
+        viewModel.loginUiState.test {
             val initialState = awaitItem()
             assertThat(initialState.domain).isEmpty()
 
@@ -69,7 +69,7 @@ class LoginViewModelTest {
     @Test
     fun testOnUserNameChanged() = runTest {
         val value = "anderson"
-        viewModel.uiState.test {
+        viewModel.loginUiState.test {
             val initialState = awaitItem()
             assertThat(initialState.userName).isEmpty()
 
@@ -84,7 +84,7 @@ class LoginViewModelTest {
     @Test
     fun testOnPasswordChanged() = runTest {
         val value = "123456"
-        viewModel.uiState.test {
+        viewModel.loginUiState.test {
             val initialState = awaitItem()
             assertThat(initialState.password).isEmpty()
 
@@ -112,7 +112,7 @@ class LoginViewModelTest {
         stubGetValueFromUseCase(domain, userName, password)
 
         viewModel.uiEvent.test {
-            viewModel.onLogin()
+            viewModel.onLogin(TEST_ANDROID_ID)
             val uiEvent = awaitItem()
             assertThat(uiEvent).isInstanceOf(LoginEvent.LoginError::class.java)
 
@@ -128,7 +128,7 @@ class LoginViewModelTest {
         val mockResult = Result.Failure(mockk(relaxed = true))
 
         stubGetValueFromUseCase(domain, userName, password)
-        coEvery { loginUseCase.invoke(domain, userName, password) } returns mockResult
+        coEvery { loginUseCase.invoke(domain, userName, password, TEST_ANDROID_ID) } returns mockResult
         viewModel.init()
 
         viewModel.uiState.test stateBlock@{
@@ -140,7 +140,7 @@ class LoginViewModelTest {
                 val loginStateDeferred = async { this@stateBlock.awaitItem() }
                 val eventDeferred = async { this@eventBlock.awaitItem() }
 
-                viewModel.onLogin()
+                viewModel.onLogin(TEST_ANDROID_ID)
 
                 val loginState = loginStateDeferred.await()
                 val event = eventDeferred.await()
@@ -166,7 +166,7 @@ class LoginViewModelTest {
         val mockResult = Result.ResultSuccess<User>(result = mockk())
 
         stubGetValueFromUseCase(domain, userName, password)
-        coEvery { loginUseCase.invoke(domain, userName, password) } returns mockResult
+        coEvery { loginUseCase.invoke(domain, userName, password, TEST_ANDROID_ID) } returns mockResult
         viewModel.init()
 
         viewModel.uiState.test stateBlock@{
@@ -177,7 +177,7 @@ class LoginViewModelTest {
                 val loginStateDeferred = async { this@stateBlock.awaitItem() }
                 val loginEventDeferred = async { this@eventBlock.awaitItem() }
 
-                viewModel.onLogin()
+                viewModel.onLogin(TEST_ANDROID_ID)
                 val loadingState = this@stateBlock.awaitItem()
                 assertThat(loadingState.isLoading).isTrue()
 
@@ -188,5 +188,8 @@ class LoginViewModelTest {
                 assertThat(loginEvent).isInstanceOf(LoginEvent.LoginSuccess::class.java)
             }
         }
+    }
+    companion object {
+        private const val TEST_ANDROID_ID = "android-test-id"
     }
 }
